@@ -5,6 +5,9 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.preprocessing import MinMaxScaler
 import tqdm
 
+
+
+
 def label_fit_transform(column, enc_type="label"):
     if enc_type == "label":
         mfit = LabelEncoder()
@@ -37,18 +40,18 @@ def nanNone(X):
 def nanZero(X):
     return X.where(pd.notnull(X), 0)
 
-def _quantization_binning(self, data):
-    qtls = np.arange(0.0, 1.0 + 1 / self.num_bins, 1 / self.num_bins)
+def _quantization_binning(data, num_bins=10):
+    qtls = np.arange(0.0, 1.0 + 1 / num_bins, 1 / num_bins)
     bin_edges = np.quantile(data, qtls, axis=0)  # (num_bins + 1, num_features)
     bin_widths = np.diff(bin_edges, axis=0)
     bin_centers = bin_edges[:-1] + bin_widths / 2  # ()
     return bin_edges, bin_centers, bin_widths
 
-def _quantize(self, inputs, bin_edges):
+def _quantize(inputs, bin_edges, num_bins=10):
     quant_inputs = np.zeros(inputs.shape[0])
     for i, x in enumerate(inputs):
         quant_inputs[i] = np.digitize(x, bin_edges)
-    quant_inputs = quant_inputs.clip(1, self.num_bins) - 1  # Clip edges
+    quant_inputs = quant_inputs.clip(1, num_bins) - 1  # Clip edges
     return quant_inputs
 
 
